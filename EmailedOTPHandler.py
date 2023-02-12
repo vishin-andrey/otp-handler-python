@@ -3,17 +3,18 @@ from abc import ABC, abstractmethod
 
 
 class EmailProviderHandler(ABC):
+    # this abstract class should be implemented for a particular email provider
 
     @abstractmethod
-    def start(self, email_subject):
+    def start(self, email_subject):  # start the connection to email provider
         pass
 
     @abstractmethod
-    def is_email_received(self):
+    def is_email_received(self):  # check if a new email with email_subject was received
         pass
 
     @abstractmethod
-    def get_message(self):
+    def get_message(self):  # get the message of the last email with email_subject
         pass
 
 
@@ -31,14 +32,14 @@ class EmailedOTPHandler:
     def parse_otp(self):
         message = self.email_provider.get_message()
         assert message is not None, 'No message received'
-        pos = message.find(self.otp_key_phrase)  # find the position of the OTP key phrase
-        assert pos != -1, 'OTP key phrase not found'
-        pos = pos + len(self.otp_key_phrase)  # move to the position of the OTP
-        return message[pos:pos + self.otp_length]  # get the OTP
+        position = message.find(self.otp_key_phrase)  # find the position of the OTP key phrase
+        assert position != -1, 'OTP key phrase not found'
+        position = position + len(self.otp_key_phrase)  # move to the position of the OTP
+        return message[position:position + self.otp_length]  # get the OTP
 
     def get_otp(self):
         # trying to get a new email with email_subject, checking every 5 sec
-        for i in range(6):
+        for attempt in range(6):
             if self.email_provider.is_email_received():
                 return self.parse_otp()
             time.sleep(5)
