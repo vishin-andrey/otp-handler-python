@@ -11,6 +11,7 @@ if __name__ == '__main__':
     otp_handler.start_email_provider()  # start email provider
     # -> Here trigger the OTP email sending
     otp = otp_handler.get_otp()  # get OTP from email
-    print(otp)
+    print(f'OTP: {otp}')
+
 
 

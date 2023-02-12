@@ -13,6 +13,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 CLIENT_SECRETS_FILE = 'gmail_credentials.json'
 TOKEN_FILE = 'token.json'
 
+
 class GmailHandler(EmailProviderHandler):
     def __init__(self):
         self.service = None
@@ -65,7 +66,7 @@ class GmailHandler(EmailProviderHandler):
             message = self.service.users().messages().get(userId='me', id=self.email_id).execute()
         except HttpError as error:
             print(f'Gmail get message error: {error}')
-        return message.message['snippet'] if message is not None else None
+        return message.get('snippet', []) if message is not None else None
 
     def is_email_received(self):
         new_email_id = self.get_email_id()
