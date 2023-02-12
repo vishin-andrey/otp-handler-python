@@ -32,9 +32,8 @@ class GmailHandler(EmailProviderHandler):
 
     def get_credentials(self):
         creds = None
-        # The file token.json stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
+        # TOKEN_FILE stores the user's access and refresh tokens
+        # it's created automatically for the first authorization
         if os.path.exists(TOKEN_FILE):
             creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
         # If there are no (valid) credentials available, let the user log in.
@@ -66,7 +65,7 @@ class GmailHandler(EmailProviderHandler):
             message = self.service.users().messages().get(userId='me', id=self.email_id).execute()
         except HttpError as error:
             print(f'Gmail get message error: {error}')
-        return message
+        return message.message['snippet'] if message is not None else None
 
     def is_email_received(self):
         new_email_id = self.get_email_id()
