@@ -37,7 +37,7 @@ class EmailedOTPHandler:
         return message[pos:pos + self.otp_length]  # get the OTP
 
     def get_otp(self):
-        # trying to get a new email, checking for a new message every 5 sec
+        # trying to get a new email with email_subject, checking every 5 sec
         for i in range(6):
             if self.email_provider.is_email_received():
                 return self.parse_otp()
